@@ -308,8 +308,8 @@ export function LandingPage({ onEnter }: LandingPageProps) {
             <motion.div
               key={index}
               className={`w-3 h-3 rounded-full cursor-pointer transition-all duration-300 ${currentSlide === index
-                  ? 'bg-emerald-400 w-8'
-                  : 'bg-white/30 hover:bg-white/50'
+                ? 'bg-emerald-400 w-8'
+                : 'bg-white/30 hover:bg-white/50'
                 }`}
               onClick={() => setCurrentSlide(index)}
               whileHover={{ scale: 1.2 }}
