@@ -11,7 +11,7 @@ import { Badge } from './ui/badge';
 import { motion } from 'framer-motion';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import { sendDiscordLog } from '../utils/discordLogger';
 
 interface GetConsultationProps {
@@ -30,7 +30,7 @@ export function GetConsultation({ onBack }: GetConsultationProps) {
     timeframe: '',
     currentEnergyBill: '',
     propertySize: '',
-    specificNeeds: [],
+    specificNeeds: [] as string[],
     additionalInfo: '',
     preferredContactMethod: 'email',
     agreesToTerms: false
@@ -191,7 +191,7 @@ export function GetConsultation({ onBack }: GetConsultationProps) {
         timeframe: '',
         currentEnergyBill: '',
         propertySize: '',
-        specificNeeds: [],
+        specificNeeds: [] as string[],
         additionalInfo: '',
         preferredContactMethod: 'email',
         agreesToTerms: false
