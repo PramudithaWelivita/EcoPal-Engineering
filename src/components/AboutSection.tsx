@@ -145,7 +145,7 @@ export function AboutSection() {
                 </div>
                 <div>
                   <div className="font-semibold text-[#0B3D2E]">Clean Energy</div>
-                  <div className="text-sm text-gray-600">50MW Generated</div>
+                  <div className="text-sm text-gray-600">50ajhcacabcjbascMW Generated</div>
                 </div>
               </div>
             </motion.div>
