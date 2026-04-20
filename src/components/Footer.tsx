@@ -120,7 +120,9 @@ export function Footer({ onNavigate }: FooterProps = {}) {
 
               {/* Social Media */}
               <div className="flex space-x-4 mt-6">
-                {socialLinks.map((social, index) => (
+                {socialLinks.map((social, index) => {
+                  const Icon = social.icon;
+                  return (
                   <motion.a
                     key={index}
                     href={social.href}
@@ -134,9 +136,10 @@ export function Footer({ onNavigate }: FooterProps = {}) {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <social.icon className="w-5 h-5" />
+                    <Icon className="w-5 h-5" />
                   </motion.a>
-                ))}
+                  );
+                })}
               </div>
             </motion.div>
 

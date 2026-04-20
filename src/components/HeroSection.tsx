@@ -25,11 +25,11 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
         {/* Floating Icons */}
         <motion.div
           className="absolute top-20 left-10 w-16 h-16 bg-emerald-400/20 backdrop-blur-sm rounded-full flex items-center justify-center"
-          animate={{ 
+          animate={{
             y: [0, -20, 0],
             rotate: [0, 180, 360]
           }}
-          transition={{ 
+          transition={{
             duration: 6,
             repeat: Infinity,
             ease: "easeInOut"
@@ -40,11 +40,11 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
 
         <motion.div
           className="absolute top-32 right-16 w-20 h-20 bg-teal-400/20 backdrop-blur-sm rounded-full flex items-center justify-center"
-          animate={{ 
+          animate={{
             y: [0, 30, 0],
             x: [0, -10, 0]
           }}
-          transition={{ 
+          transition={{
             duration: 8,
             repeat: Infinity,
             ease: "easeInOut"
@@ -55,11 +55,11 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
 
         <motion.div
           className="absolute bottom-32 left-20 w-12 h-12 bg-cyan-400/20 backdrop-blur-sm rounded-full"
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             opacity: [0.5, 1, 0.5]
           }}
-          transition={{ 
+          transition={{
             duration: 4,
             repeat: Infinity,
             ease: "easeInOut"
@@ -68,11 +68,11 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
 
         <motion.div
           className="absolute bottom-20 right-32 w-14 h-14 bg-emerald-500/20 backdrop-blur-sm rounded-full"
-          animate={{ 
+          animate={{
             rotate: [0, 360],
             scale: [1, 0.8, 1]
           }}
-          transition={{ 
+          transition={{
             duration: 10,
             repeat: Infinity,
             ease: "linear"
@@ -88,7 +88,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
           transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Badge */}
-          <motion.div 
+          <motion.div
             className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8"
             whileHover={{ scale: 1.05 }}
           >
@@ -97,7 +97,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
           </motion.div>
 
           {/* Main Heading */}
-          <motion.h1 
+          <motion.h1
             className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -115,38 +115,38 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
           </motion.h1>
 
           {/* Subtitle */}
-          <motion.p 
+          <motion.p
             className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4 }}
           >
-            Leading Sri Lanka's renewable energy revolution with cutting-edge biogas systems, 
+            Leading Sri Lanka's renewable energy revolution with cutting-edge biogas systems,
             sustainable agriculture solutions, and smart technologies for a greener tomorrow.
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div 
+          <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
+              <Button
                 onClick={() => onNavigate?.('consultation')}
-                size="lg" 
+                size="lg"
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none px-8 py-3 rounded-full shadow-2xl shadow-emerald-500/25"
               >
                 Get a Free Consultation
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </motion.div>
-            
+
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
+              <Button
                 onClick={() => onNavigate?.('story')}
-                variant="outline" 
+                variant="outline"
                 size="lg"
                 className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm px-8 py-3 rounded-full"
               >
@@ -156,7 +156,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
           </motion.div>
 
           {/* Stats */}
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -179,7 +179,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps = {}) {
       </div>
 
       {/* Scroll Indicator */}
-      <motion.div 
+      <motion.div
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}

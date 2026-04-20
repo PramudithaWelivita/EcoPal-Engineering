@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Play, Youtube, ExternalLink } from 'lucide-react';
 import { Button } from './ui/button';
@@ -9,21 +10,28 @@ export function PodcastSection() {
       title: "Future of Renewable Energy in Sri Lanka",
       description: "Exploring the latest trends and opportunities in renewable energy sector",
       duration: "45:30",
-      views: "12.5K"
+      views: "12.5K",
+      videoId: "90ALHXJc8u4" // Main featured video
     },
     {
       title: "Sustainable Agriculture Revolution",
       description: "How bio-fertilizers are changing farming practices across the island",
       duration: "38:15",
-      views: "8.7K"
+      views: "8.7K",
+      videoId: "m1n7T0zXj0s" // Placeholder video ID about smart farming
     },
     {
       title: "Smart Greenhouse Technologies",
       description: "IoT solutions that are revolutionizing modern agriculture",
       duration: "52:20",
-      views: "15.2K"
+      views: "15.2K",
+      videoId: "x2zjoF_HhWw" // Placeholder video ID about greenhouse tech
     }
   ];
+
+  const [activeEpisode, setActiveEpisode] = useState(episodes[0]);
+
+  if (!activeEpisode) return null;
 
   return (
     <section id="podcast" className="py-20 bg-gradient-to-br from-gray-50 to-emerald-50 relative overflow-hidden">
@@ -69,47 +77,32 @@ export function PodcastSection() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <Card className="relative bg-white/80 backdrop-blur-sm border border-white/20 overflow-hidden">
-              {/* Video Thumbnail */}
-              <div className="relative h-64 bg-gradient-to-br from-[#0B3D2E] to-emerald-600 flex items-center justify-center">
-                <motion.a
-                  href="https://youtube.com/@ecopalengineering?si=LxkWNGhYINrc9MU0"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer group"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Play className="w-8 h-8 text-white ml-1 group-hover:scale-110 transition-transform" />
-                </motion.a>
-                
-                {/* Live Indicator */}
-                <div className="absolute top-4 left-4 flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-white text-sm font-medium">LIVE</span>
-                </div>
-
-                {/* Duration */}
-                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <span className="text-white text-sm">45:30</span>
-                </div>
+            <Card className="relative bg-white/80 backdrop-blur-sm border border-white/20 overflow-hidden shadow-xl rounded-2xl">
+              {/* Working YouTube Embed */}
+              <div className="relative aspect-video bg-black w-full flex items-center justify-center">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${activeEpisode.videoId}?autoplay=0&rel=0&modestbranding=1`}
+                  title={activeEpisode.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full border-0 absolute inset-0"
+                ></iframe>
               </div>
 
               {/* Content */}
               <div className="p-6">
                 <h3 className="text-xl font-bold text-[#0B3D2E] mb-2">
-                  Latest Episode: Future of Renewable Energy
+                  {activeEpisode.title}
                 </h3>
-                <p className="text-gray-600 mb-4">
-                  In this episode, we discuss the future of renewable energy in Sri Lanka 
-                  and how EcoPal Engineering is leading the sustainable revolution.
+                <p className="text-gray-600 mb-4 h-12 overflow-hidden text-ellipsis">
+                  {activeEpisode.description}
                 </p>
                 
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <span>12.5K views</span>
+                    <span>{activeEpisode.views} views</span>
                     <span>•</span>
-                    <span>2 days ago</span>
+                    <span>{activeEpisode.duration}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Youtube className="w-5 h-5 text-red-600" />
@@ -117,8 +110,8 @@ export function PodcastSection() {
                   </div>
                 </div>
 
-                <Button asChild className="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-700 hover:to-emerald-700 text-white border-none">
-                  <a href="https://youtube.com/@ecopalengineering?si=LxkWNGhYINrc9MU0" target="_blank" rel="noopener noreferrer">
+                <Button asChild className="w-full bg-gradient-to-r from-red-600 to-emerald-600 hover:from-red-700 hover:to-emerald-700 text-white border-none flex items-center justify-center">
+                  <a href={`https://youtube.com/watch?v=${activeEpisode.videoId}`} target="_blank" rel="noopener noreferrer">
                     Watch on YouTube
                     <ExternalLink className="ml-2 w-4 h-4" />
                   </a>
@@ -133,31 +126,40 @@ export function PodcastSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="flex flex-col space-y-6"
           >
-            <h3 className="text-2xl font-bold text-[#0B3D2E] mb-6">Recent Episodes</h3>
-            <div className="space-y-4">
+            <h3 className="text-2xl font-bold text-[#0B3D2E]">Recent Episodes</h3>
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-emerald-200 scrollbar-track-transparent">
               {episodes.map((episode, index) => (
                 <motion.div
                   key={index}
-                  className="group p-4 rounded-xl bg-white/60 backdrop-blur-sm border border-white/20 hover:bg-white/80 transition-all duration-300 cursor-pointer"
+                  onClick={() => setActiveEpisode(episode)}
+                  className={`group p-4 rounded-xl backdrop-blur-sm border transition-all duration-300 cursor-pointer ${
+                    activeEpisode.videoId === episode.videoId 
+                    ? 'bg-emerald-50 border-emerald-300 shadow-md' 
+                    : 'bg-white/60 border-white/20 hover:bg-white/80 hover:shadow-sm'
+                  }`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ 
-                    scale: 1.02,
-                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
-                  }}
+                  whileHover={{ scale: 1.02 }}
                   viewport={{ once: true }}
                 >
                   <div className="flex items-start space-x-4">
-                    {/* Play Button */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-emerald-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Play className="w-5 h-5 text-white ml-0.5" />
+                    {/* Play Button Indicator */}
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${
+                      activeEpisode.videoId === episode.videoId 
+                      ? 'bg-red-500 text-white shadow-lg' 
+                      : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      <Play className="w-5 h-5 ml-0.5 fill-current" />
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-[#0B3D2E] group-hover:text-emerald-600 transition-colors mb-1">
+                      <h4 className={`font-semibold transition-colors mb-1 truncate ${
+                        activeEpisode.videoId === episode.videoId ? 'text-red-600' : 'text-[#0B3D2E] group-hover:text-emerald-600'
+                      }`}>
                         {episode.title}
                       </h4>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">
@@ -176,7 +178,7 @@ export function PodcastSection() {
 
             {/* Subscribe Button */}
             <motion.div
-              className="mt-8"
+              className="mt-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -187,7 +189,7 @@ export function PodcastSection() {
                 variant="outline" 
                 className="w-full border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center"
               >
-                <a href="https://youtube.com/@ecopalengineering?si=LxkWNGhYINrc9MU0" target="_blank" rel="noopener noreferrer">
+                <a href="https://youtube.com/@ecopalengineering" target="_blank" rel="noopener noreferrer">
                   <Youtube className="mr-2 w-5 h-5" />
                   Subscribe to Our Channel
                 </a>

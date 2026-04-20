@@ -22,7 +22,7 @@ function Counter({ to, suffix = '', prefix = '' }: { to: number; suffix?: string
 
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !inView.current) {
+      if (e?.isIntersecting && !inView.current) {
         inView.current = true;
         animate(count, to, { duration: 2.4, ease: [0.25, 0.46, 0.45, 0.94] });
       }
@@ -588,7 +588,7 @@ function BiogasIllustration() {
         {/* animated flow dot — left pipe */}
         <motion.circle r="4" fill="rgba(52,211,153,0.9)" filter="url(#glow)"
           animate={{ offsetDistance: ['0%', '100%'] }}
-          style={{ offsetPath: "path('M130 272 L152 272 L152 295 L170 295')" } as React.CSSProperties}
+          style={{ offsetPath: "path('M130 272 L152 272 L152 295 L170 295')" } as any}
           transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
         />
 
@@ -600,7 +600,7 @@ function BiogasIllustration() {
         {/* animated flow dot — right pipe */}
         <motion.circle r="4" fill="rgba(52,211,153,0.9)" filter="url(#glow)"
           animate={{ offsetDistance: ['0%', '100%'] }}
-          style={{ offsetPath: "path('M350 295 L368 295 L368 272 L390 272')" } as React.CSSProperties}
+          style={{ offsetPath: "path('M350 295 L368 295 L368 272 L390 272')" } as any}
           transition={{ duration: 2.5, repeat: Infinity, ease: 'linear', delay: 1.2 }}
         />
 
@@ -755,196 +755,9 @@ export function LandingPage({ onEnter }: LandingPageProps) {
       </div>
 
       {/* ══════════════════════════════════════════
-          SECTION 1 — HERO (SPLIT LAYOUT)
-      ══════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center" style={{ zIndex: 10 }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-16 w-full py-28 lg:py-0">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-
-            {/* ── LEFT: TEXT ── */}
-            <div className="flex flex-col items-start gap-3 mb-12">
-              {/* eyebrow pill */}
-              <motion.div
-                className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border"
-                style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.3)', backdropFilter: 'blur(12px)' }}
-                initial={{ opacity: 0, y: -16 }}
-                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.2 }}
-              >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-300 text-sm font-semibold tracking-widest uppercase">Sri Lanka's Green Future</span>
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              </motion.div>
-
-              {/* main heading */}
-              <motion.h1
-                className="mb-6 font-black"
-                style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(2.6rem, 5vw, 4.5rem)', lineHeight: 1.06, letterSpacing: '-0.02em' }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                <span className="block text-white">Smart Cities</span>
-                <span className="block" style={{
-                  background: 'linear-gradient(135deg, #34d399 0%, #2dd4bf 45%, #38bdf8 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>Built on Green</span>
-                <span className="block text-white">Innovation</span>
-              </motion.h1>
-
-              {/* subheading */}
-              <motion.p
-                className="mb-10 text-emerald-300 leading-[1.75]"
-                style={{ fontSize: '1.0625rem', maxWidth: '32rem' }}
-                initial={{ opacity: 0, y: 24 }}
-                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.6 }}
-              >
-                EcoPal Engineering pioneers sustainable technology — from renewable energy infrastructure to smart agriculture — building a cleaner, greener Sri Lanka for generations to come.
-              </motion.p>
-
-              {/* CTA row */}
-              <motion.div
-                className="flex flex-row items-center gap-4 mb-12"
-                initial={{ opacity: 0, y: 24 }}
-                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.8 }}
-              >
-                {/* primary glow button */}
-                <div className="relative shrink-0 mt-6">
-                  <motion.div
-                    className="absolute -inset-2 rounded-full"
-                    style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.45), transparent 70%)' }}
-                    animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0.65, 0.35] }}
-                    transition={{ duration: 2.8, repeat: Infinity }}
-                  />
-                  <motion.button
-                    onClick={onEnter}
-                    className="group relative overflow-hidden rounded-full text-white font-bold"
-                    style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '1rem',
-                      padding: '14px 32px',
-                      background: 'linear-gradient(135deg, #059669 0%, #0d9488 55%, #0891b2 100%)',
-                      boxShadow: '0 0 36px rgba(52,211,153,0.38), 0 6px 24px rgba(0,0,0,0.45)',
-                      letterSpacing: '0.01em',
-                    }}
-                    whileHover={{
-                      scale: 1.05, y: -2,
-                      boxShadow: '0 0 64px rgba(52,211,153,0.6), 0 10px 36px rgba(0,0,0,0.45)',
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.22 }}
-                  >
-                    {/* shimmer sweep */}
-                    <motion.div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)' }}
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.6 }}
-                    />
-                    <span className="relative flex items-center gap-2.5">
-                      Enter EcoPal Universe
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </span>
-                  </motion.button>
-                </div>
-
-                {/* divider */}
-                <div className="w-px h-8 shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }} />
-
-                {/* secondary: explore */}
-                <motion.button
-                  className="inline-flex items-center gap-1.5 shrink-0"
-                  style={{ color: 'rgba(52,211,153,0.75)', fontFamily: 'Inter, sans-serif', fontSize: '0.875rem', fontWeight: 600, letterSpacing: '0.01em' }}
-                  whileHover={{ color: 'rgba(52,211,153,1)', x: 3 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => containerRef.current?.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-                >
-                  Explore our work
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </motion.button>
-              </motion.div>
-
-              {/* social proof strip */}
-              <motion.div
-                className="flex items-center gap-0 pt-8 border-t w-full"
-                style={{ borderColor: 'rgba(255,255,255,0.07)' }}
-                initial={{ opacity: 0 }}
-                animate={isLoaded ? { opacity: 1 } : {}}
-                transition={{ duration: 1, delay: 1.1 }}
-              >
-                {[
-                  { n: '150+', l: 'Projects' },
-                  { n: '98%', l: 'Satisfaction' },
-                  { n: '12+', l: 'Years Experience' },
-                ].map(({ n, l }, i) => (
-                  <div key={l} className="flex items-center px-6">
-                    <div className="flex flex-col gap-1" style={{ minWidth: 90 }}>
-                      <span
-                        className="font-black leading-none"
-                        style={{
-                          fontFamily: 'Poppins, sans-serif', fontSize: '1.5rem', textShadow: '0 0 10px rgba(52,211,153,0.4)',
-                          background: 'linear-gradient(135deg, #34d399, #2dd4bf)',
-                          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-                        }}
-                      >{n}</span>
-                      <span className="text-white/70 font-medium" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{l}</span>
-                    </div>
-                    {i < 2 && <div className="self-stretch w-px mx-8" style={{ background: 'rgba(255,255,255,0.08)' }} />}
-                  </div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* ── RIGHT: CITY ILLUSTRATION ── */}
-            <motion.div
-              className="relative flex items-center justify-center"
-              style={{ minHeight: 520 }}
-              initial={{ opacity: 0, x: 48 }}
-              animate={isLoaded ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 1.2, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              {/* logo badge — floats above illustration */}
-              <motion.div
-                className="absolute top-4 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border"
-                style={{ background: 'rgba(5,150,80,0.14)', backdropFilter: 'blur(16px)', borderColor: 'rgba(52,211,153,0.28)' }}
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div
-                  className="overflow-hidden border bg-white/5 flex items-center justify-center p-1"
-                  style={{ width: 28, height: 28, borderRadius: 8, borderColor: 'rgba(52,211,153,0.3)', aspectRatio: '1/1' }}
-                >
-                  <img src="/logo-white.png" alt="EcoPal" className="w-full h-full object-contain" style={{ aspectRatio: '1/1' }} />
-                </div>
-                <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>EcoPal Engineering</span>
-              </motion.div>
-
-              <CityIllustration />
-            </motion.div>
-          </div>
-        </div>
-
-        {/* scroll cue */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer"
-          style={{ zIndex: 20 }}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          onClick={() => containerRef.current?.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-        >
-          <span className="text-white/70 text-xs tracking-widest uppercase">Scroll</span>
-          <ChevronDown className="w-5 h-5 text-white/70" />
-        </motion.div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           SECTION 2 — INTRODUCING BIOGAS
       ══════════════════════════════════════════ */}
-      <section className="relative py-20" style={{ zIndex: 10 }}>
+      <section className="relative min-h-screen flex items-center" style={{ zIndex: 10 }}>
 
         {/* ambient orb */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -1128,6 +941,197 @@ export function LandingPage({ onEnter }: LandingPageProps) {
             </motion.div>
           </div>
         </div>
+      
+        {/* scroll cue */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer"
+          style={{ zIndex: 20 }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          onClick={() => containerRef.current?.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+        >
+          <span className="text-white/70 text-xs tracking-widest uppercase">Scroll</span>
+          <ChevronDown className="w-5 h-5 text-white/70" />
+        </motion.div>
+      </section>
+
+      
+
+      {/* ══════════════════════════════════════════
+          SECTION 1 — HERO (SPLIT LAYOUT)
+      ══════════════════════════════════════════ */}
+      <section className="relative py-20" style={{ zIndex: 10 }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-16">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+
+            {/* ── LEFT: TEXT ── */}
+            <div className="flex flex-col items-start gap-3 mb-12">
+              {/* eyebrow pill */}
+              <motion.div
+                className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border"
+                style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.3)', backdropFilter: 'blur(12px)' }}
+                initial={{ opacity: 0, y: -16 }}
+                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.2 }}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-300 text-sm font-semibold tracking-widest uppercase">Sri Lanka's Green Future</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </motion.div>
+
+              {/* main heading */}
+              <motion.h1
+                className="mb-6 font-black"
+                style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(2.6rem, 5vw, 4.5rem)', lineHeight: 1.06, letterSpacing: '-0.02em' }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 1, delay: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+              >
+                <span className="block text-white">Smart Cities</span>
+                <span className="block" style={{
+                  background: 'linear-gradient(135deg, #34d399 0%, #2dd4bf 45%, #38bdf8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>Built on Green</span>
+                <span className="block text-white">Innovation</span>
+              </motion.h1>
+
+              {/* subheading */}
+              <motion.p
+                className="mb-10 text-emerald-300 leading-[1.75]"
+                style={{ fontSize: '1.0625rem', maxWidth: '32rem' }}
+                initial={{ opacity: 0, y: 24 }}
+                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                EcoPal Engineering pioneers sustainable technology — from renewable energy infrastructure to smart agriculture — building a cleaner, greener Sri Lanka for generations to come.
+              </motion.p>
+
+              {/* CTA row */}
+              <motion.div
+                className="flex flex-row items-center gap-4 mb-12"
+                initial={{ opacity: 0, y: 24 }}
+                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.8 }}
+              >
+                {/* primary glow button */}
+                <div className="relative shrink-0 mt-6">
+                  <motion.div
+                    className="absolute -inset-2 rounded-full"
+                    style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.45), transparent 70%)' }}
+                    animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0.65, 0.35] }}
+                    transition={{ duration: 2.8, repeat: Infinity }}
+                  />
+                  <motion.button
+                    onClick={onEnter}
+                    className="group relative overflow-hidden rounded-full text-white font-bold"
+                    style={{
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '1rem',
+                      padding: '14px 32px',
+                      background: 'linear-gradient(135deg, #059669 0%, #0d9488 55%, #0891b2 100%)',
+                      boxShadow: '0 0 36px rgba(52,211,153,0.38), 0 6px 24px rgba(0,0,0,0.45)',
+                      letterSpacing: '0.01em',
+                    }}
+                    whileHover={{
+                      scale: 1.05, y: -2,
+                      boxShadow: '0 0 64px rgba(52,211,153,0.6), 0 10px 36px rgba(0,0,0,0.45)',
+                    }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ duration: 0.22 }}
+                  >
+                    {/* shimmer sweep */}
+                    <motion.div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%)' }}
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.6 }}
+                    />
+                    <span className="relative flex items-center gap-2.5">
+                      Enter EcoPal Universe
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </motion.button>
+                </div>
+
+                {/* divider */}
+                <div className="w-px h-8 shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+                {/* secondary: explore */}
+                <motion.button
+                  className="inline-flex items-center gap-1.5 shrink-0"
+                  style={{ color: 'rgba(52,211,153,0.75)', fontFamily: 'Inter, sans-serif', fontSize: '0.875rem', fontWeight: 600, letterSpacing: '0.01em' }}
+                  whileHover={{ color: 'rgba(52,211,153,1)', x: 3 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => containerRef.current?.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                >
+                  Explore our work
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </motion.button>
+              </motion.div>
+
+              {/* social proof strip */}
+              <motion.div
+                className="flex items-center gap-0 pt-8 border-t w-full"
+                style={{ borderColor: 'rgba(255,255,255,0.07)' }}
+                initial={{ opacity: 0 }}
+                animate={isLoaded ? { opacity: 1 } : {}}
+                transition={{ duration: 1, delay: 1.1 }}
+              >
+                {[
+                  { n: '150+', l: 'Projects' },
+                  { n: '98%', l: 'Satisfaction' },
+                  { n: '12+', l: 'Years Experience' },
+                ].map(({ n, l }, i) => (
+                  <div key={l} className="flex items-center px-6">
+                    <div className="flex flex-col gap-1" style={{ minWidth: 90 }}>
+                      <span
+                        className="font-black leading-none"
+                        style={{
+                          fontFamily: 'Poppins, sans-serif', fontSize: '1.5rem', textShadow: '0 0 10px rgba(52,211,153,0.4)',
+                          background: 'linear-gradient(135deg, #34d399, #2dd4bf)',
+                          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+                        }}
+                      >{n}</span>
+                      <span className="text-white/70 font-medium" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{l}</span>
+                    </div>
+                    {i < 2 && <div className="self-stretch w-px mx-8" style={{ background: 'rgba(255,255,255,0.08)' }} />}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* ── RIGHT: CITY ILLUSTRATION ── */}
+            <motion.div
+              className="relative flex items-center justify-center"
+              style={{ minHeight: 520 }}
+              initial={{ opacity: 0, x: 48 }}
+              animate={isLoaded ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 1.2, delay: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {/* logo badge — floats above illustration */}
+              <motion.div
+                className="absolute top-4 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border"
+                style={{ background: 'rgba(5,150,80,0.14)', backdropFilter: 'blur(16px)', borderColor: 'rgba(52,211,153,0.28)' }}
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <div
+                  className="overflow-hidden border bg-white/5 flex items-center justify-center p-1"
+                  style={{ width: 28, height: 28, borderRadius: 8, borderColor: 'rgba(52,211,153,0.3)', aspectRatio: '1/1' }}
+                >
+                  <img src="/logo-white.png" alt="EcoPal" className="w-full h-full object-contain" style={{ aspectRatio: '1/1' }} />
+                </div>
+                <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '0.8125rem', fontWeight: 600, color: 'rgba(255,255,255,0.88)' }}>EcoPal Engineering</span>
+              </motion.div>
+
+              <CityIllustration />
+            </motion.div>
+          </div>
+        </div>
+
+        
       </section>
 
       {/* ── Corner branding ── */}
