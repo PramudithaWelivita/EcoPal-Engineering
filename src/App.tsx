@@ -18,7 +18,7 @@ import { UnderConstruction } from './components/UnderConstruction';
 
 type Page = 'landing' | 'home' | 'privacy' | 'terms' | 'cookies' | 'story' | 'projects' | 'consultation';
 
-const IS_UNDER_CONSTRUCTION = false; // TOGGLE THIS FALSE TO SHOW FULL SITE
+const IS_UNDER_CONSTRUCTION = true; // TOGGLE THIS FALSE TO SHOW FULL SITE
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
