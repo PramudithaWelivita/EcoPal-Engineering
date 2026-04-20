@@ -5,7 +5,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Card } from './ui/card';
 import { useState } from 'react';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { sendDiscordLog } from '../utils/discordLogger';
 
 export function ContactSection() {
@@ -32,36 +31,51 @@ export function ContactSection() {
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-604c55a2/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`
-        },
-        body: JSON.stringify(formData)
+      // 1. Log to Discord
+      const discordSuccess = await sendDiscordLog({
+        embeds: [{
+          title: "New Contact Message - EcoPal",
+          color: 0x10B981, // Emerald 500
+          fields: [
+            { name: "Name", value: `${formData.firstName} ${formData.lastName}` || "N/A", inline: true },
+            { name: "Email", value: formData.email || "N/A", inline: true },
+            { name: "Phone", value: formData.phone || "N/A", inline: true },
+            { name: "Service Interest", value: formData.service || "N/A", inline: true },
+            { name: "Message", value: formData.message || "N/A" }
+          ],
+          timestamp: new Date().toISOString()
+        }]
       });
 
-      const result = await response.json();
-      
-      if (result.success) {
-        // Log to Discord
-        await sendDiscordLog({
-          embeds: [{
-            title: "New Contact Message",
-            color: 0x10B981, // Emerald 500
-            fields: [
-              { name: "Name", value: `${formData.firstName} ${formData.lastName}` || "N/A", inline: true },
-              { name: "Email", value: formData.email || "N/A", inline: true },
-              { name: "Phone", value: formData.phone || "N/A", inline: true },
-              { name: "Service Interest", value: formData.service || "N/A", inline: true },
-              { name: "Message", value: formData.message || "N/A" }
-            ],
-            timestamp: new Date().toISOString()
-          }]
-        });
+      // 2. Email Notification using Web3Forms
+      // You must provide your key in .env -> VITE_WEB3FORMS_KEY
+      const web3formsKey = import.meta.env.VITE_WEB3FORMS_KEY;
+      let emailSuccess = false;
 
+      if (web3formsKey) {
+        const emailResponse = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: web3formsKey,
+            subject: 'New Website Inquiry - EcoPal Engineering',
+            from_name: 'EcoPal Website',
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            phone: formData.phone,
+            service: formData.service,
+            message: formData.message
+          })
+        });
+        const emailResult = await emailResponse.json();
+        emailSuccess = emailResult.success;
+      } else {
+        console.warn("VITE_WEB3FORMS_KEY is missing! Email notification skipped.");
+      }
+
+      if (discordSuccess || emailSuccess) {
         setSubmitStatus('success');
-        setStatusMessage(result.message);
+        setStatusMessage('Your message has been received! Our team will contact you soon.');
         setFormData({
           firstName: '',
           lastName: '',
@@ -72,7 +86,7 @@ export function ContactSection() {
         });
       } else {
         setSubmitStatus('error');
-        setStatusMessage(result.message);
+        setStatusMessage('Your system credentials might be blank. Please set up Discord or Email keys.');
       }
     } catch (error) {
       console.log('Contact form submission error:', error);
@@ -149,18 +163,20 @@ export function ContactSection() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        {/* ALIGNMENT FIX: Use items-stretch so both columns are equal height, h-full stretches components internally */}
+        <div className="grid lg:grid-cols-2 gap-12 items-stretch">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="h-full"
           >
-            <Card className="bg-white/5 backdrop-blur-md border border-white/10 p-8">
+            <Card className="bg-white/5 backdrop-blur-md border border-white/10 p-8 h-full flex flex-col">
               <h3 className="text-2xl font-bold text-white mb-6">Send us a Message</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 flex flex-col flex-grow">
                 {/* Status Message */}
                 {submitStatus !== 'idle' && (
                   <motion.div
@@ -174,9 +190,9 @@ export function ContactSection() {
                   >
                     <div className="flex items-center">
                       {submitStatus === 'success' ? (
-                        <CheckCircle className="w-5 h-5 mr-2" />
+                        <CheckCircle className="w-5 h-5 mr-2 shrink-0" />
                       ) : (
-                        <AlertCircle className="w-5 h-5 mr-2" />
+                        <AlertCircle className="w-5 h-5 mr-2 shrink-0" />
                       )}
                       <span className="text-sm">{statusMessage}</span>
                     </div>
@@ -221,51 +237,53 @@ export function ContactSection() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-gray-300 text-sm mb-2">Phone</label>
-                  <Input 
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+94 71 234 5678"
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-emerald-400"
-                  />
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">Phone</label>
+                    <Input 
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="+94 71 234 5678"
+                      className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-emerald-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">Service Interest</label>
+                    <select 
+                      name="service"
+                      value={formData.service}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white focus:border-emerald-400 focus:outline-none"
+                    >
+                      <option value="" className="text-black">Select a service</option>
+                      <option value="biogas" className="text-black">Biogas Systems</option>
+                      <option value="agriculture" className="text-black">Agriculture Solutions</option>
+                      <option value="tech" className="text-black">Tech Solutions</option>
+                      <option value="future" className="text-black">Future Services</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-gray-300 text-sm mb-2">Service Interest</label>
-                  <select 
-                    name="service"
-                    value={formData.service}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-md text-white focus:border-emerald-400 focus:outline-none"
-                  >
-                    <option value="">Select a service</option>
-                    <option value="biogas">Biogas Systems</option>
-                    <option value="agriculture">Agriculture Solutions</option>
-                    <option value="tech">Tech Solutions</option>
-                    <option value="future">Future Services</option>
-                  </select>
-                </div>
-
-                <div>
+                <div className="flex-grow flex flex-col">
                   <label className="block text-gray-300 text-sm mb-2">Message *</label>
                   <Textarea 
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     placeholder="Tell us about your project..."
-                    rows={4}
                     required
-                    className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-emerald-400"
+                    className="bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-emerald-400 flex-grow mb-6 resize-none h-32"
                   />
                 </div>
 
+                {/* Button pinned to the bottom */}
                 <Button 
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none py-3 disabled:opacity-50"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none py-3 disabled:opacity-50 mt-auto"
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                   <Send className="ml-2 w-4 h-4" />
@@ -280,7 +298,7 @@ export function ContactSection() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="h-full flex flex-col space-y-6"
           >
             {/* Contact Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -295,14 +313,14 @@ export function ContactSection() {
                   whileHover={{ scale: 1.05 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-all duration-300 p-6">
+                  <Card className="bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-all duration-300 p-6 h-full flex flex-col justify-center">
                     <div className="flex items-start space-x-4">
-                      <div className={`w-12 h-12 bg-white/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <div className={`w-12 h-12 bg-white/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shrink-0`}>
                         <item.icon className={`w-6 h-6 ${item.color}`} />
                       </div>
-                      <div>
-                        <h4 className="text-white font-semibold mb-1">{item.label}</h4>
-                        <p className="text-gray-300 text-sm">{item.value}</p>
+                      <div className="overflow-hidden">
+                        <h4 className="text-white font-semibold mb-1 truncate">{item.label}</h4>
+                        <p className="text-gray-300 text-sm break-words">{item.value}</p>
                       </div>
                     </div>
                   </Card>
@@ -312,50 +330,40 @@ export function ContactSection() {
 
             {/* Map */}
             <motion.div
+              className="flex-grow flex flex-col"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <Card className="bg-white/5 backdrop-blur-md border border-white/10 p-6">
+              <Card className="bg-white/5 backdrop-blur-md border border-white/10 p-6 flex-grow flex flex-col">
                 <h4 className="text-white font-semibold mb-4">Find Us</h4>
-                <div className="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <div className="w-full bg-gray-800 rounded-lg flex items-center justify-center relative overflow-hidden flex-grow min-h-[160px]">
                   {/* Map Placeholder */}
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-teal-600/20"></div>
-                  <div className="relative z-10 text-center">
+                  <div className="relative z-10 text-center p-4">
                     <MapPin className="w-12 h-12 text-emerald-400 mx-auto mb-2" />
-                    <p className="text-white text-sm">255/3, Kandaliyaddapaluwa</p>
+                    <p className="text-white text-sm font-medium">255/3, Kandaliyaddapaluwa</p>
                     <p className="text-gray-300 text-sm">Ganemulla, Sri Lanka</p>
                   </div>
                   
                   {/* Interactive elements */}
                   <motion.div
                     className="absolute top-4 left-4 w-3 h-3 bg-emerald-400 rounded-full"
-                    animate={{ 
-                      scale: [1, 1.5, 1],
-                      opacity: [1, 0.5, 1]
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: Infinity 
-                    }}
+                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   />
                   
                   <motion.div
                     className="absolute bottom-6 right-6 w-2 h-2 bg-teal-400 rounded-full"
-                    animate={{ 
-                      scale: [1, 1.2, 1]
-                    }}
-                    transition={{ 
-                      duration: 3,
-                      repeat: Infinity 
-                    }}
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
                   />
                 </div>
                 
                 <Button 
                   variant="outline"
-                  className="w-full mt-4 border-white/20 text-white hover:bg-white/10"
+                  className="w-full mt-6 border-white/20 text-white bg-transparent hover:bg-white/10 shrink-0"
                 >
                   Open in Google Maps
                 </Button>
@@ -364,7 +372,7 @@ export function ContactSection() {
 
             {/* Quick Action Buttons */}
             <motion.div
-              className="grid grid-cols-2 gap-4"
+              className="grid grid-cols-2 gap-4 pt-2"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -372,10 +380,10 @@ export function ContactSection() {
             >
               <Button 
                 asChild
-                className="bg-green-600 hover:bg-green-700 text-white border-none"
+                className="bg-green-600 hover:bg-green-700 text-white border-none py-6 h-auto"
               >
                 <a href="https://wa.me/94718001885" target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="mr-2 w-4 h-4" />
+                  <MessageCircle className="mr-2 w-5 h-5" />
                   WhatsApp
                 </a>
               </Button>
@@ -383,10 +391,10 @@ export function ContactSection() {
               <Button 
                 asChild
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10"
+                className="border-white/20 text-white bg-transparent hover:bg-white/10 py-6 h-auto"
               >
                 <a href="tel:+94718001885">
-                  <Phone className="mr-2 w-4 h-4" />
+                  <Phone className="mr-2 w-5 h-5" />
                   Call Now
                 </a>
               </Button>

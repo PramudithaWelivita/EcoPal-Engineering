@@ -14,11 +14,18 @@ import { WatchOurStory } from './components/WatchOurStory';
 import { ViewOurProjects } from './components/ViewOurProjects';
 import { GetConsultation } from './components/GetConsultation';
 import { LandingPage } from './components/LandingPage';
+import { UnderConstruction } from './components/UnderConstruction';
 
 type Page = 'landing' | 'home' | 'privacy' | 'terms' | 'cookies' | 'story' | 'projects' | 'consultation';
 
+const IS_UNDER_CONSTRUCTION = false; // TOGGLE THIS FALSE TO SHOW FULL SITE
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
+
+  if (IS_UNDER_CONSTRUCTION) {
+    return <UnderConstruction />;
+  }
 
   const navigateToPage = (page: Page) => {
     setCurrentPage(page);
