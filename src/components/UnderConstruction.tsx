@@ -45,8 +45,8 @@ export function UnderConstruction() {
   const [statusMessage, setStatusMessage] = useState('');
 
   const socialLinks = [
-    { icon: Youtube, href: "#", label: "YouTube", color: "hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/50" },
-    { icon: Facebook, href: "#", label: "Facebook", color: "hover:bg-blue-500/20 hover:text-blue-500 hover:border-blue-500/50" },
+    { icon: Youtube, href: "https://www.youtube.com/@ecopalengineering", label: "YouTube", color: "hover:bg-red-500/20 hover:text-red-500 hover:border-red-500/50" },
+    { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61573311737261", label: "Facebook", color: "hover:bg-blue-500/20 hover:text-blue-500 hover:border-blue-500/50" },
     { icon: Instagram, href: "#", label: "Instagram", color: "hover:bg-pink-500/20 hover:text-pink-500 hover:border-pink-500/50" },
     { icon: Linkedin, href: "#", label: "LinkedIn", color: "hover:bg-blue-600/20 hover:text-blue-600 hover:border-blue-600/50" },
     { icon: MessageCircle, href: "https://wa.me/94718001885", label: "WhatsApp", color: "hover:bg-green-500/20 hover:text-green-500 hover:border-green-500/50" }
