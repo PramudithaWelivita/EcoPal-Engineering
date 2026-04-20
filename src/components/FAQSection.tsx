@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { HelpCircle } from 'lucide-react';
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
 } from './ui/accordion';
 
 const faqs = [
@@ -67,8 +67,8 @@ export function FAQSection() {
         >
           <Accordion type="single" collapsible className="w-full space-y-2">
             {faqs.map((faq, index) => (
-              <AccordionItem 
-                key={index} 
+              <AccordionItem
+                key={index}
                 value={`item-${index}`}
                 className="border-b-2 border-gray-100 last:border-0 pb-2"
               >
