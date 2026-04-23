@@ -21,7 +21,7 @@ type Page = 'landing' | 'home' | 'privacy' | 'terms' | 'cookies' | 'story' | 'pr
 const IS_UNDER_CONSTRUCTION = false; // TOGGLE THIS FALSE TO SHOW FULL SITE
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('landing');
+  const [currentPage, setCurrentPage] = useState<Page>('home');
 
   if (IS_UNDER_CONSTRUCTION) {
     return <UnderConstruction />;
